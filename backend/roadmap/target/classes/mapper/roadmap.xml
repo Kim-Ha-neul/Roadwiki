@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.web.blog.model.repo.RoadmapRepo">
+	
+	<select id="selectUidByRmid" parameterType="int" resultType="int">
+		select uid
+		from roadmap
+		where rmid = #{rmid}
+	</select>
+	
+	<select id="selectlastRmidByUid" parameterType="int" resultType ="int">
+		select rmid 
+		from roadmap
+		where uid = #{uid} and createDate in (select max(createDate) from roadmap)
+	</select>
+	<!-- 	permission  0:private 1 : public -->
+	<select id="selectMyRoadmap" parameterType="int" resultType="Roadmap">
+		select *
+		from roadmap
+		where rmid = #{rmid}
+	</select>
+	<select id="selectOtherRoadmap" parameterType="int" resultType="Roadmap">
+		select *
+		from roadmap
+		where rmid = #{rmid} and permission = 1
+	</select>
+	
+	<select id="selectMyRoadmapListByUid" parameterType="map" resultType="Roadmap">
+		select * from roadmap
+		where uid = #{uid} and createDate in (select max(createDate) from roadmap group by uid,rmorder) 
+		order by rmorder desc
+	</select>
+	<select id="selectOtherRoadmapListByUid" parameterType="map" resultType="Roadmap">
+		select * from roadmap
+		where uid = #{uid} and permission = 1 and createDate in (select max(createDate) from roadmap group by uid,rmorder)
+		order by rmorder desc
+	</select>
+	
+	<select id="selectRoadmapListByRmorder" parameterType="map" resultType="Roadmap">
+		select *
+		from roadmap
+		where uid = #{uid} and rmorder = #{rmorder}
+		order by createDate desc
+		
+	</select>
+
+	<select id="selectOfficialListRoadmap" parameterType="map" resultType="Roadmap">
+		select * from roadmap
+		where uid <![CDATA[ < ]]> 0 and createDate in (select max(createDate) from roadmap group by uid,rmorder)
+		order by rmorder
+	</select>	
+
+	<insert id="update" parameterType="Roadmap">
+		insert
+		into roadmap(uid,name,rmorder, tmp,term)
+		values(#{uid}, #{name}, #{rmorder},#{tmp},#{term})
+	</insert>
+	<insert id="insert" parameterType="Roadmap">
+		insert into roadmap(uid,name,rmorder,tmp,term)
+		select #{uid},#{name}, if(isnull(max(rmorder)), 1, max(rmorder)+1) ,#{tmp}, #{term}
+		from roadmap where uid = #{uid}
+	</insert>
+	<delete id ="delete" parameterType ="map">
+		delete from roadmap where rmorder = #{rmorder} and uid = #{uid}
+	</delete>
+</mapper>
+	

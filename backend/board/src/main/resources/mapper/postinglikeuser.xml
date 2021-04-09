@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.web.blog.model.repo.PostingLikeUserRepo">
+	
+	<select id="select" parameterType="PostingLikeUser" resultType="PostingLikeUser">
+		select * 
+		from postinglikeuser
+		where pid=#{pid}
+		and uid=#{uid}
+	</select>
+	
+	<select id="selectList" parameterType="int" resultType="Posting">
+		select *
+		from posting
+		where pid in (select pid
+					 from postinglikeuser
+					 where uid=#{uid})
+	</select>
+	
+	<select id="totallike" parameterType="int" resultType="int">
+		select count(*)
+		from postinglikeuser
+		where pid=#{pid}
+	</select>
+	
+	<insert id="insert" parameterType="PostingLikeUser">
+		insert
+		into postinglikeuser(pid, uid)
+		values(#{pid}, #{uid})
+	</insert>
+	
+	<update id="updateLikeCnt" parameterType="Map">
+		update posting
+		set likeCnt = #{likeCnt}
+		where pid=#{pid}
+	</update>
+
+	<delete id="delete" parameterType="PostingLikeUser">
+		delete 
+		from postinglikeuser
+		where pid=#{pid}
+		and uid=#{uid}
+	</delete>
+	
+	<select id="selectHate" parameterType="PostingHateUser" resultType="PostingHateUser">
+		select * 
+		from postinghateuser
+		where pid=#{pid}
+		and uid=#{uid}
+	</select>
+	
+	<select id="totalhate" parameterType="int" resultType="int">
+		select count(*)
+		from postinghateuser
+		where pid=#{pid}
+	</select>
+	
+	<insert id="insertHate" parameterType="PostingHateUser">
+		insert
+		into postinghateuser(pid, uid)
+		values(#{pid}, #{uid})
+	</insert>
+
+	<delete id="deleteHate" parameterType="PostingHateUser">
+		delete 
+		from postinghateuser
+		where pid=#{pid}
+		and uid=#{uid}
+	</delete>
+</mapper>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.web.blog.model.repo.FollowRepo">
+	
+	<select id="selectFollowers" parameterType="int" resultType="Follow">
+		select * 
+		from follow 
+		where touid=#{touid}
+	</select>
+	
+	<select id="selectFollowings" parameterType="int" resultType="Follow">
+		select * 
+		from follow 
+		where fromuid=#{fromuid}
+	</select>
+	
+	<select id="selectFollowerUid" parameterType="int" resultType="User">
+		select * 
+		from user 
+		where uid=#{uid}
+	</select>
+	
+	<insert id="insert" parameterType="Follow">
+		insert 
+		into follow(fromuid, touid)
+		values(#{fromuid}, #{touid})
+	</insert>
+	
+	<delete id="delete" parameterType="Follow">
+		delete 
+		from follow 
+		where fromuid=#{fromuid}
+		and touid=#{touid}
+	</delete>
+
+</mapper>
+	

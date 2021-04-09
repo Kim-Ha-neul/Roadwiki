@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="com.web.blog.model.repo.PostingRepo">
+    
+    <select id="select" parameterType="Integer" resultType="Posting">
+        select * 
+        from posting 
+        where pid=#{pid}
+    </select>
+    
+    <select id="selectPid" resultType="Posting">
+    	select *
+    	from posting
+    	order by pid desc;
+    </select>
+    
+    <select id="selectTags" parameterType="int" resultType="String">
+    	select tagname
+    	from postingtag
+    	where pid=#{pid}
+    </select>
+    
+    <select id="selectPostingLike" parameterType="int" resultType="int">
+    	select count(pid)
+    	from postinglikeuser
+    	where pid=#{pid}
+    </select>
+    
+    
+     <select id="selectListAll" parameterType="Map" resultType="Posting">
+        select * 
+        from posting
+        <!-- where classifier=#{classifier} -->
+        order by pid DESC limit #{page}, #{cnt}
+    </select>
+    
+   	<select id="selectListUid" parameterType="int" resultType="Posting">
+   		select *
+   		from posting
+   		where uid=#{uid}
+   	</select>
+    
+     <select id="selectListAllTag" parameterType="Map" resultType="Posting">
+        select * 
+        from posting
+        <!-- where classifier=#{classifier} AND tag=#{tag} -->
+        order by pid DESC limit #{page}, #{cnt}
+    </select>
+    
+    <select id="selectListName" parameterType="Map" resultType="Posting">
+        select * 
+        from posting
+        where classifier=#{classifier} AND name=#{word}
+        order by pid DESC limit #{page}, #{cnt}
+    </select>
+    
+    <select id="selectListNameTag" parameterType="Map" resultType="Posting">
+        select * 
+        from posting
+        <!-- where classifier=#{classifier} AND name=#{word} AND tag=#{tag}  -->
+        order by pid DESC limit #{page}, #{cnt}
+    </select>
+    
+    <select id="selectListTitle" parameterType="Map" resultType="Posting">
+        select * 
+        from posting
+        <!-- where classifier=#{classifier} AND title like concat("%", #{word}, "%") -->
+        where title like concat("%", #{word}, "%")
+        order by pid DESC limit #{page}, #{cnt}
+    </select>
+    
+    <select id="selectListTitleTag" parameterType="Map" resultType="Posting">
+        select * 
+        from posting
+        <!-- where classifier=#{classifier} AND title=concat("%", #{word}, "%") AND tag=#{tag} -->
+        order by pid DESC limit #{page}, #{cnt}
+    </select>
+    
+    <select id="selectListContent" parameterType="Map" resultType="Posting">
+        select * 
+        from posting
+        <!-- where classifier=#{classifier} AND content=concat("%", #{word}, "%") AND tag=#{tag}  -->
+        order by pid DESC limit #{page}, #{cnt}
+    </select>
+    
+    <select id="selectListContentTag" parameterType="Map" resultType="Posting">
+        select * 
+        from posting
+        <!-- where classifier=#{classifier} AND content=concat("%", #{word}, "%") AND tag=#{tag} -->
+        order by pid DESC limit #{page}, #{cnt}
+    </select>
+    
+    <insert id="insert" parameterType="Posting">
+<!--     insert 
+        into posting(classifier, tag, title, uid, content, image)
+        values(#{classifier}, #{tag}, #{title}, #{uid}, #{content}, #{image}) -->
+        insert
+        into posting(classifier, uid, content, title)
+        values(#{classifier}, #{uid}, #{content}, #{title})
+    </insert>
+    <insert id="insertTag">
+    	insert into postingtag
+    	values(#{pid}, #{tagid}, #{tagname})
+    </insert>
+    
+    <update id="update" parameterType="Posting">
+        update posting
+        set  title=#{title}, content=#{content}, modifyDate=#{modifyDate}
+        where pid=#{pid}
+    </update>
+    
+    <delete id="delete" parameterType="Integer">
+        delete 
+        from posting 
+        where pid=#{pid}
+    </delete>
+    
+    <select id="totalCount" resultType="Integer">
+        select count(*)
+        from posting
+    </select>
+    
+	<select id="selectLikeHigh" parameterType="Integer" resultType="Posting">
+		select *
+		from posting
+		order by likeCnt DESC limit 0, #{cnt};
+	</select>
+	
+	<select id="postingListUid" parameterType="Integer" resultType="Posting">
+		select *
+		from posting
+		where uid=#{uid}
+	</select>
+
+	<delete id="deleteTags" parameterType="Integer">
+		delete from postingtag
+		where pid=#{pid}
+	</delete>
+</mapper>

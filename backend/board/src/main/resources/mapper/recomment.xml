@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.web.blog.model.repo.RecommentRepo">
+
+	<select id="select" parameterType="Integer" resultType="Recomment">
+		select * 
+		from recomment 
+		where rcid=#{rcid}
+	</select>
+
+	<select id="selectUserName" parameterType="Integer" resultType="String">
+		select name
+		from user
+		where uid=(select uid 
+					from recomment
+					where rcid=#{rcid})
+	</select>
+
+ 	<select id="selectListCid" parameterType="Integer" resultType="Recomment">
+		select * 
+		from recomment
+		where cid=#{cid}
+		order by rcid desc
+	</select> 
+	
+	<insert id="insert" parameterType="Recomment">
+		insert 
+		into recomment(cid, uid, content)
+		values(#{cid}, #{uid}, #{content})
+	</insert>
+	
+	<update id="update" parameterType="Recomment">
+		update recomment
+		set content=#{content}, modifyDate=now()
+		where rcid=#{rcid}
+	</update>
+	
+	<delete id="delete" parameterType="Integer">
+		delete 
+		from recomment 
+		where rcid=#{rcid}
+	</delete>
+
+</mapper>

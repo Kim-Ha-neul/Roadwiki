@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.web.blog.model.repo.RoadcommentRepo">
+	<select id="selectRoadComment" parameterType="int" resultType="Curriculum">
+		select * from roadcomment
+		where rmid = #{rmid}
+	</select>
+	<insert id ="insert" parameterType="Curriculum">
+		insert into roadcomment
+		values (#{key},#{rmid},#{uid},#{loc},#{text},#{category})
+	</insert>
+	
+	<delete id = "delete" parameterType="map">
+		delete from roadcomment 
+		where roadcomment.key = #{key} and rmid = #{rmid}
+	</delete>
+	
+	<delete id = "deleteAll" parameterType="int">
+		delete from roadcomment 
+		where rmid = #{rmid}
+	</delete>
+	
+	<insert id ="update" parameterType="Curriculum">
+		update roadcomment 
+		set loc = #{loc}, text = #{text}
+		where roadcomment.key = #{key} and rmid = #{rmid}
+	</insert>
+</mapper>
+	

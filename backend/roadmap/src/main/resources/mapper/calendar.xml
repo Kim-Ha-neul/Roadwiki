@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.web.blog.model.repo.CalendarRepo">
+
+
+	<!-- 캘린더용 -->
+	<select id="selectBigByUid" parameterType="int"
+		resultType="Curriculum">
+		select big.*,bigdata.text,bigdata.content from big left
+		join bigdata on
+		bigdata.bdid = big.bdid
+		where rmid in (select rmid from
+		roadmap
+		where uid =#{uid} and createDate in (select max(createDate)
+		from roadmap
+		group by uid, rmorder)) and startdate != ""
+
+	</select>
+
+	<select id="selectMiddleByUid" parameterType="int"
+		resultType="Curriculum">
+		select middle.*,middledata.text,middledata.content from
+		middle left join
+		middledata on middledata.mdid = middle.mdid
+		where rmid
+		in (select rmid from roadmap
+		where uid =#{uid} and createDate in
+		(select max(createDate) from roadmap
+		group by uid, rmorder)) and
+		startdate != ""
+
+	</select>
+
+	<select id="selectSmallByUid" parameterType="int"
+		resultType="Curriculum">
+		select
+		small.*,smalldata.text,smalldata.content from small
+		left join
+		smalldata on smalldata.sdid = small.sdid
+		where rmid
+		in (select
+		rmid from roadmap
+		where uid =#{uid} and createDate in (select
+		max(createDate) from roadmap
+		group by uid, rmorder)) and startdate !=
+		""
+
+	</select>
+	<select id="selectCusByUid" parameterType="int"
+		resultType="Curriculum">
+		select
+		* from customcurri
+		where rmid in (select
+		rmid from roadmap
+		where uid =
+		#{uid} and createDate in (select
+		max(createDate) from roadmap
+		group by
+		uid, rmorder)) and startdate !=
+		""
+	</select>
+
+	<update id="updateBig" parameterType="Curriculum">
+		update big set
+		startdate = #{startdate},
+		enddate = #{enddate}
+		where rmid = #{rmid} and big.key = #{key}
+	</update>
+
+	<update id="updateMiddle" parameterType="Curriculum">
+		update middle set
+		startdate = #{startdate},
+		enddate = #{enddate}
+		where
+		rmid = #{rmid} and middle.key = #{key}
+	</update>
+
+	<update id="updateSmall" parameterType="Curriculum">
+		update small set
+		startdate = #{startdate},
+		enddate = #{enddate}
+		where
+		rmid = #{rmid} and small.key = #{key}
+	</update>
+
+	<update id="updateCus" parameterType="Curriculum">
+		update customcurri set
+		startdate = #{startdate},
+		enddate = #{enddate}
+		where
+		rmid = #{rmid} and customcurri.key = #{key}
+	</update>
+</mapper>
+	

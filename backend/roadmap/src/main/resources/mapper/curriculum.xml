@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.web.blog.model.repo.CurriculumRepo">
+
+
+
+	<!-- 추천용 -->
+	<select id="selectSmallText" parameterType="map"
+		resultType="Curriculumtext">
+		select *
+		from smalldata
+		where mdid = #{mdid}
+		and bdid =
+		#{bdid}
+	</select>
+	
+	<select id="selectSmallTextBykeyword" parameterType="String"
+		resultType="Curriculumtext">
+		select *
+		from smalldata
+		where text = #{keyword}
+	</select>
+	
+	<select id="selectMiddleText" parameterType="int"
+		resultType="Curriculumtext">
+		select *
+		from middledata
+		where bdid =#{bdid}
+	</select>
+
+	<select id="selectBigText" resultType="Curriculumtext">
+		select *
+		from bigdata
+	</select>
+
+	<select id="searchSmallText" parameterType="String"
+		resultType="Curriculumtext">
+		select *
+		from smalldata
+		where text like
+		concat('%',#{text},'%')
+	</select>
+
+	<select id="searchMiddleText" parameterType="String"
+		resultType="Curriculumtext">
+		select *
+		from middledata
+		where text like
+		concat('%',#{text},'%')
+	</select>
+
+	<select id="searchBigText" parameterType="String"
+		resultType="Curriculumtext">
+		select *
+		from bigdata
+		where text like concat('%',#{text},'%')
+	</select>
+
+
+
+	<insert id="insertSmallText" parameterType="Curriculumtext">
+		insert into
+		smalldata(bdid,mdid,text,content)
+		values(#{bdid},#{mdid},#{text},#{content})
+	</insert>
+
+	<insert id="insertMiddleText" parameterType="Curriculumtext">
+		insert into
+		middledata(bdid,text,content)
+		values(#{bdid},#{text},#{content})
+	</insert>
+
+	<insert id="insertBigText" parameterType="Curriculumtext">
+		insert into
+		bigdata(text,content)
+		values(#{text},#{content})
+	</insert>
+
+	<delete id="deleteSmallText" parameterType="int">
+		delete from
+		smalldata
+		where sdid = #{sdid}
+	</delete>
+
+	<delete id="deleteMiddleText" parameterType="int">
+		delete from
+		middledata
+		where mdid = #{mdid}
+	</delete>
+
+	<delete id="deleteBigText" parameterType="int">
+		delete from
+		bigdata
+		where bdid = #{bdid}
+	</delete>
+
+	<!-- 실제 데이터 용 -->
+	<select id="selectSmallByRmid" parameterType="int"
+		resultType="Curriculum">
+		select
+		small.*,smalldata.mdid,smalldata.bdid,smalldata.text,smalldata.content
+		from small left join smalldata on small.sdid = smalldata.sdid
+		where
+		rmid = #{rmid};
+	</select>
+
+	<select id="selectMiddleByRmid" parameterType="int"
+		resultType="Curriculum">
+		select
+		middle.*,middledata.bdid,middledata.text,middledata.content from
+		middle left join middledata on middle.mdid = middledata.mdid where
+		rmid = #{rmid};
+	</select>
+
+	<select id="selectBigByRmid" parameterType="int"
+		resultType="Curriculum">
+		select big.*,bigdata.text,bigdata.content from big left
+		join bigdata on
+		big.bdid = bigdata.bdid where rmid = #{rmid};
+	</select>
+
+	<select id="selectCusByRmid" parameterType="int"
+		resultType="Curriculum">
+		select * from customcurri
+		where rmid = #{rmid};
+	</select>
+
+
+	<insert id="insertSmall" parameterType="List">
+		insert into small
+		values
+		<foreach collection="list" item="curr" separator=" , ">
+			(#{curr.key},#{curr.rmid},#{curr.sdid},#{curr.loc},#{curr.memo},#{curr.startdate},#{curr.enddate},#{curr.category})
+		</foreach>
+	</insert>
+
+	<insert id="insertMiddle" parameterType="List">
+		insert into middle
+		values
+		<foreach collection="list" item="curr" separator=" , ">
+			(#{curr.key},#{curr.rmid},#{curr.mdid},#{curr.loc},#{curr.memo},#{curr.startdate},#{curr.enddate},#{curr.category})
+		</foreach>
+	</insert>
+
+	<insert id="insertBig" parameterType="List">
+		insert into big
+		values
+		<foreach collection="list" item="curr" separator=" , ">
+			(#{curr.key},#{curr.rmid},#{curr.bdid},#{curr.loc},#{curr.memo},#{curr.startdate},#{curr.enddate},#{curr.category})
+		</foreach>
+	</insert>
+
+	<insert id="insertCus" parameterType="List">
+		insert into customcurri
+		values
+		<foreach collection="list" item="curr" separator=" , ">
+			(#{curr.key},#{curr.rmid},#{curr.loc},#{curr.memo},#{curr.startdate},#{curr.enddate},#{curr.category},#{curr.text},#{curr.content})
+		</foreach>
+	</insert>
+
+
+
+</mapper>
+	

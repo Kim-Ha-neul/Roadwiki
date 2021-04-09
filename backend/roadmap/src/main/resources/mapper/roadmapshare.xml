@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.web.blog.model.repo.RoadmapShareRepo">
+
+	<select id="selectAll" resultType="RoadmapShare">
+		select *
+		from roadmapshare
+		order by createDate desc
+	</select>
+	
+	<select id="selectByUserName" parameterType="String"
+		resultType="RoadmapShare">
+		select * from roadmapshare
+		where uid in
+		(select uid from user where name like concat('%',#{name},'%'))
+		order by createDate desc
+	</select>
+
+	<select id="selectByTitle" parameterType="String"
+		resultType="RoadmapShare">
+		select * from roadmapshare
+		where title like concat('%',#{title},'%')
+		order by createDate desc
+	</select>
+
+	<select id ="isShared" parameterType ="int" resultType = "int">
+		select count(*) from roadmapshare
+		where rmid = #{rmid}
+	</select>
+
+	<insert id="insert" parameterType="RoadmapShare">
+		insert into
+		roadmapshare(rmid,uid,title,useroadback)
+		values (#{rmid},#{uid},#{title},#{useroadback})
+	</insert>
+	<delete id="delete" parameterType="map">
+		delete from roadmapshare
+		where pid = #{pid} and uid = #{uid}
+	</delete>
+
+	<update id="updatelike" parameterType="map">
+		update roadmapshare set
+		likecnt = likecnt+1
+		where pid = #{pid}
+	</update>
+	<update id="updatedislike" parameterType="map">
+		update roadmapshare set
+		likecnt = likecnt-1
+		where pid = #{pid}
+	</update>
+
+	<insert id="insertlike" parameterType="map">
+		insert into
+		roadmaplikeuser
+		values (#{pid},#{uid})
+	</insert>
+
+	<delete id="deletelike" parameterType="map">
+		delete from
+		roadmaplikeuser
+		where pid = #{pid} and uid = #{uid}
+	</delete>
+
+	<select id="selectlike" parameterType="map" resultType="int">
+		select
+		count(*)
+		from roadmaplikeuser
+		where pid = #{pid} and uid = #{uid}
+	</select>
+	
+	<select id="selectLikeHigh" parameterType="Integer" resultType="RoadmapShare">
+		select *
+		from roadmapshare
+		order by likeCnt DESC limit 0, #{cnt};
+	</select>
+
+</mapper>
+	

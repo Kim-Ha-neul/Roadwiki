@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.web.blog.model.repo.UserRepo">
+<!-- 	<select id="selectAll" resultType="Answer">
+		select * 
+		from answer;
+	</select> -->
+
+	<select id="select" parameterType="String" resultType="User">
+		select * 
+		from user 
+		where email=#{email}
+	</select>
+	
+	<select id="selectUid" parameterType="int" resultType="User">
+		select * 
+		from user 
+		where uid=#{uid}
+	</select>
+	
+	<select id="selectkeyword" parameterType="int" resultType="int">
+		select kwid
+		from keyword
+		where kwid in (select kwid 
+						from userkeyword
+						where uid = #{uid});
+	</select>
+	
+	<select id="selectkeywordtext" parameterType="int" resultType="String">
+		select word
+		from keyword
+		where kwid in (select kwid 
+						from userkeyword
+						where uid = #{uid});
+	</select>
+	
+	<insert id="insert" parameterType="User">
+		insert 
+		into user(email, password, name)
+		values(#{email}, #{password}, #{name})
+	</insert>
+	
+	<insert id="insertkeyword" parameterType="map">
+		insert
+		into userkeyword(uid, kwid, priority)
+		values(#{uid}, #{kwid}, #{priority})
+	</insert>
+	
+	<update id="update" parameterType="User">
+		update user
+		set name=#{name}
+		where email=#{email}
+	</update>
+	
+	<delete id="delete" parameterType="String">
+		delete 
+		from user 
+		where email=#{email}
+	</delete>
+	
+	<select id="getName" parameterType="Integer" resultType="User">
+		select name, oneline
+		from user 
+		where uid=#{uid}
+	</select>
+	
+	<!-- <select id="getOneline" parameterType="Integer" resultType="String">
+		select oneline
+		from user 
+		where uid=#{uid}
+	</select> -->
+
+</mapper>
+	
